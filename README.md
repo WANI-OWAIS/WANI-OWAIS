@@ -14,7 +14,7 @@
 - 📫 How to reach me **waniowais528@gmail.com**
 
 - ⚡ Fun fact **I am Funny**
-
+<hr>
 <h2 align="center">⚒️ Languages-Frameworks-Tools ⚒️</h2>
 <br/>
 <div align="center">
@@ -23,8 +23,7 @@
 </div>
 
 <br/>
-
-
+<hr>
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/tobiasmeyhoefer/tobiasmeyhoefer/output/github-snake-dark.svg" />
   <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/tobiasmeyhoefer/tobiasmeyhoefer/output/github-snake.svg" />
