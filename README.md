@@ -1,5 +1,31 @@
-# 💫 About Me:
-🔭 I’m currently working on **MyPortfolio**<br><br> 🌱 I’m currently learning **Web Development**<br><br> 👯 I’m looking to collaborate on **Open-source projects**<br><br> 🤝 I’m looking for help with **Collaboration Opportunities**<br><br> 💬 Ask me about **MEARN**<br><br> 📫 How to reach me **waniowais528@gmail.com**<br><br> ⚡ Fun fact **I am Funny**
+<p align="right"> <img src="https://komarev.com/ghpvc/?username=wani-owais&label=Profile%20views&color=0e75b6&style=flat" alt="wani-owais" /> </p>
+
+<h1 align="center">
+    <img src="https://readme-typing-svg.herokuapp.com/?font=Righteous&size=35&center=true&vCenter=true&width=500&height=70&duration=4000&lines=Hi+There!+👋;+I'm+Wani+Owais!;" />
+</h1>
+
+<h3 align="center">A passionate Software Engineer ...</h3>
+
+<br/>
+
+
+ 
+
+- 🔭 I’m currently working on **MyPortfolio**
+
+- 🌱 I’m currently learning **Web Development**
+
+- 👯 I’m looking to collaborate on **Open-source projects**
+
+- 🤝 I’m looking for help with **Collaboration Opportunities**
+
+- 💬 Ask me about **MEARN**
+
+- 📫 How to reach me **waniowais528@gmail.com**
+
+- ⚡ Fun fact **I am Funny**
+
+ 
 
 
 ## 🌐 Socials:
