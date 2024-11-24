@@ -1,9 +1,8 @@
 # 💫 About Me:
 🔭 I’m currently working on **MyPortfolio**<br><br> 🌱 I’m currently learning **Web Development**<br><br> 👯 I’m looking to collaborate on **Open-source projects**<br><br> 🤝 I’m looking for help with **Collaboration Opportunities**<br><br> 💬 Ask me about **MEARN**<br><br> 📫 How to reach me **waniowais528@gmail.com**<br><br> ⚡ Fun fact **I am Funny**
 
-<div align="center">
+
 ## 🌐 Socials:
-</div>
 <div align="center"> 
   <a href="mailto:pedro.sales.muniz@gmail.com">
     <img src="https://img.shields.io/badge/Gmail-333333?style=for-the-badge&logo=gmail&logoColor=red" />
