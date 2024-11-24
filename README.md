@@ -8,7 +8,7 @@
 
 <br/>
 
-<div align="center">
+
 - 🔭 I’m currently working on **MyPortfolio**
 
 - 🌱 I’m currently learning **Web Development**
@@ -23,7 +23,6 @@
 
 - ⚡ Fun fact **I am Funny**
 
- </div>
  
 <div align="center"> 
   <a href="mailto:pedro.sales.muniz@gmail.com">
