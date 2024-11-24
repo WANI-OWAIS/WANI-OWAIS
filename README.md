@@ -13,7 +13,7 @@
 
 - 🤝 I’m looking for help with **Collaboration Opportunities**
 
-- 💬 Ask me about **Android , MEARN**
+- 💬 Ask me about ** MEARN **
 
 - 📫 How to reach me **waniowais528@gmail.com**
 
