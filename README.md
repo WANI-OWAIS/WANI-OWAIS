@@ -73,7 +73,7 @@
 <br/>
 
 <div align="center">
-<a href='https://ko-fi.com/V7V4RAK9C' target='_blank'><img height='64' style='border:0px;height:64px;' src='#' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+<p><a href="https://www.buymeacoffee.com/wani-owais"> <img align="center" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="wani-owais" /></a></p><br><br>
 </div>
 
 <br/>
