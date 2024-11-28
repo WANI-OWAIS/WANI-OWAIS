@@ -70,7 +70,9 @@
 
 <hr/>
 
-<br/>
+<h2 align="center">☕ Support ☕</h2>
+<br>
+
 
 <div align="center">
 <p><a href="https://www.buymeacoffee.com/wani-owais"> <img align="center" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="wani-owais" /></a></p><br><br>
