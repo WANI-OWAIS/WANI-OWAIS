@@ -14,7 +14,7 @@
  
  🌱 I’m currently learning **Web Development**
 
-💬 Ask me about **MEARN, DSA ... or anything [here](https://github.com/#)**
+💬 Ask me about **Web Dev, DSA ... or anything [here](https://github.com/#)**
 
 ⚡ Fun fact **"Turning coffee into code and ideas into reality!"**
 
