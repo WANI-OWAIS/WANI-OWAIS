@@ -333,38 +333,6 @@ Full-stack EdTech platform covering course authoring, a media upload pipeline an
 
 <br/>
 
-<!-- ===================== CONNECT ===================== -->
-
-## <img src="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/.github/assets/spark.svg" width="18" /> Connect With Me
-
-<div align="center">
-
-I'm always glad to talk about web development, collaborate on something interesting, or hear about a role worth exploring.
-
-<br/>
-
-<a href="https://linkedin.com/in/owais-hassan-wani">
-  <img src="https://img.shields.io/badge/LinkedIn-owais--hassan--wani-0D1117?style=for-the-badge&logo=linkedin&logoColor=3B82F6&labelColor=0D1117" alt="LinkedIn" />
-</a>
-&nbsp;
-<a href="https://wani-owais.github.io/My-Portfolio/">
-  <img src="https://img.shields.io/badge/Portfolio-wani--owais-0D1117?style=for-the-badge&logo=googlechrome&logoColor=06B6D4&labelColor=0D1117" alt="Portfolio" />
-</a>
-
-<br/><br/>
-
-<a href="mailto:owaishassanwani@gmail.com">
-  <img src="https://img.shields.io/badge/owaishassanwani@gmail.com-0D1117?style=for-the-badge&logo=gmail&logoColor=8B5CF6&labelColor=0D1117" alt="Email" />
-</a>
-&nbsp;
-<a href="https://github.com/WANI-OWAIS">
-  <img src="https://img.shields.io/badge/@WANI--OWAIS-0D1117?style=for-the-badge&logo=github&logoColor=F8FAFC&labelColor=0D1117" alt="GitHub" />
-</a>
-
-</div>
-
-<br/>
-
 <!-- ===================== FOOTER ===================== -->
 
 <div align="center">
