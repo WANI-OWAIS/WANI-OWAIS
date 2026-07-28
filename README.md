@@ -1,81 +1,82 @@
-<p align="right"> <img src="https://komarev.com/ghpvc/?username=wani-owais&label=Profile%20views&color=0e75b6&style=flat" alt="wani-owais" /> </p>
+<!-- ============================================================
+     WANI-OWAIS  ·  GitHub Profile README
+     Build order: banner -> stats -> snake -> badges
+     ============================================================ -->
 
+<!-- Profile views counter -->
+<p align="right">
+  <img src="https://komarev.com/ghpvc/?username=WANI-OWAIS&label=Profile%20views&color=0891B2&style=flat" alt="WANI-OWAIS" />
+</p>
+
+<!-- ===================== BANNER (theme-aware) ===================== -->
+<!-- Upload dark.svg and light.svg to the repo root. Until then these show broken. -->
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/light.svg">
+  <img alt="WANI-OWAIS terminal banner" src="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/dark.svg">
+</picture>
+
+<!-- ===================== TYPING HEADER ===================== -->
 <h1 align="center">
-    <img src="https://readme-typing-svg.herokuapp.com/?font=Righteous&size=35&center=true&vCenter=true&width=500&height=70&duration=4000&lines=Hi+There!+👋;+I'm+Wani+Owais!;" />
+  <img src="https://readme-typing-svg.herokuapp.com/?font=Righteous&size=35&center=true&vCenter=true&width=500&height=70&duration=4000&color=0891B2&lines=Hi+There!;I'm+Owais+Hassan+Wani!" alt="typing header" />
 </h1>
+<h3 align="center">A passionate Software Engineer</h3>
 
-<h3 align="center">A passionate Software Engineer ...</h3>
+<br/>
+
+<!-- ===================== SOCIAL BADGES ===================== -->
+<!-- LinkedIn stays on brand blue #0A66C2 or the logo vanishes (shields.io bug). -->
+<p align="center">
+  <a href="LINKEDIN_URL_HERE"><img src="https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white" alt="LinkedIn" /></a>&nbsp;
+  <a href="mailto:EMAIL_HERE"><img src="https://img.shields.io/badge/Gmail-0A101F?style=for-the-badge&logo=gmail&logoColor=EA4335" alt="Gmail" /></a>&nbsp;
+  <a href="INSTAGRAM_URL_HERE"><img src="https://img.shields.io/badge/Instagram-0A101F?style=for-the-badge&logo=instagram&logoColor=E4405F" alt="Instagram" /></a>&nbsp;
+  <a href="PORTFOLIO_URL_HERE"><img src="https://img.shields.io/badge/Portfolio-0A101F?style=for-the-badge&logo=firefoxbrowser&logoColor=22D3EE" alt="Portfolio" /></a>
+</p>
 
 <br/>
 
-<div align="center">
- 
- 🔭 I’m currently working on **MyPortfolio**
- 
- 🌱 I’m currently learning **Web Development**
-
-💬 Ask me about **Web Dev, DSA ... or anything [here](https://github.com/#)**
-
-⚡ Fun fact **"Turning coffee into code and ideas into reality!"**
-
- </div>
- 
-<div align="center"> 
-  <a href="mailto:waniowais528@gmail.com">
-    <img src="https://img.shields.io/badge/Gmail-333333?style=for-the-badge&logo=gmail&logoColor=red" />
-  </a>
-  <a href="https://www.linkedin.com/in/owaishassanwani/" target="_blank">
-    <img src="https://img.shields.io/badge/LinkedIn-0077B5?style=for-the-badge&logo=linkedin&logoColor=white" target="_blank" />
-  </a>
-  <a href="https://wani-owais.github.io/My-Portfolio/" target="_blank">
-     <img src="https://img.shields.io/badge/Portfolio-FF5722?style=for-the-badge&logo=todoist&logoColor=white" target="_blank" /> <!-- sqlite, safari, google-chrome are other good icon options -->
-  </a>
-</div>
-
- <hr/>
- 
-<h2 align="center">⚒️ Languages-Frameworks-Tools ⚒️</h2>
-<br/>
-<div align="center">
-    <img src="https://skillicons.dev/icons?i=react,bootstrap,html,css,vscode,github,figma,tailwind,git,r" />
-    <img src="https://skillicons.dev/icons?i=nodejs,python,javascript,typescript,express,mongodb,c,java,nextjs,mysql" /><br>
-</div>
+<!-- ===================== ABOUT ===================== -->
+- 🔭 I'm currently working on **[YOUR PROJECT]**
+- 🌱 I'm currently learning **Web Development**
+- 💬 Ask me about **Web Dev, DSA**
+- ⚡ Fun fact: *"Turning coffee into code and ideas into reality!"*
 
 <br/>
-<hr/>
 
-<div align="center">
-  <h2>🐍 My Contributions 🐍</h2>
-  <br>
- <img alt="snake eating my contributions" src="https://raw.githubusercontent.com/wani-owais/wani-owais/output/github-contribution-grid-snake.svg" />
+<!-- ===================== TECH STACK ===================== -->
+<h2 align="center">⚒️ Languages · Frameworks · Tools ⚒️</h2>
+<p align="center">
+  <img src="https://skillicons.dev/icons?i=js,html,css,react,nodejs,python,git,vscode,figma&theme=dark" alt="tech stack" />
+</p>
 
-  
-  <br/><br/><br/>
-</div>
+<br/>
 
-<hr/>
+<!-- ===================== CONTRIBUTION SNAKE (theme-aware) ===================== -->
+<!-- Only renders after the snake Action runs green and creates the 'output' branch. -->
+<h2 align="center">🐍 My Contributions 🐍</h2>
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/output/github-snake-dark.svg">
+  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/output/github-snake.svg">
+  <img alt="contribution snake" src="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/output/github-snake.svg">
+</picture>
 
+<br/>
+
+<!-- ===================== STATS CARDS (self-hosted) ===================== -->
+<!-- Replace YOUR-INSTANCE with your Vercel deployment of github-readme-stats. -->
 <h2 align="center">⚡ Stats ⚡</h2>
-<br>
-<div align="center">
-  <img width="390" src="https://github-readme-streak-stats.herokuapp.com/?user=wani-owais&count_private=true&theme=react&border_radius=10" alt="streak stats"/>
-  <img width="390" src="https://github-readme-stats.vercel.app/api?username=wani-owais&count_private=true&show_icons=true&theme=react&rank_icon=github&border_radius=10" alt="readme stats" />
-  <br/>
-  <img width="325" align="center" src="https://github-readme-stats.vercel.app/api/top-langs/?username=wani-owais&layout=compact&hide=none&theme=react&langs_count=10&border_radius=10" alt="top langs" />
-</div>
 
+<p align="center">
+  <img src="https://streak-stats.demolab.com?user=WANI-OWAIS&theme=dark&hide_border=true&background=0A101F&stroke=22D3EE&ring=0891B2&fire=22D3EE&currStreakLabel=22D3EE" width="100%" alt="streak stats" />
+</p>
 
-
-<br/><br/>
-
-<hr/>
-
-<h2 align="center">☕ Support ☕</h2>
-<br>
-
-
-<div align="center">
-<p><a href="https://www.buymeacoffee.com/wani-owais"> <img align="center" src="https://cdn.buymeacoffee.com/buttons/v2/default-yellow.png" height="50" width="210" alt="wani-owais" /></a></p><br><br>
-</div>
+<p align="center">
+  <img src="https://YOUR-INSTANCE.vercel.app/api?username=WANI-OWAIS&show_icons=true&hide_rank=true&hide_border=true&bg_color=0A101F&title_color=22D3EE&icon_color=0891B2&text_color=ffffff" width="49%" alt="github stats" />
+  <img src="https://YOUR-INSTANCE.vercel.app/api/top-langs?username=WANI-OWAIS&layout=compact&hide_border=true&bg_color=0A101F&title_color=22D3EE&text_color=ffffff" width="49%" alt="top languages" />
+</p>
 
 <br/>
+
+<!-- ===================== SUPPORT ===================== -->
+<h2 align="center">☕ Support ☕</h2>
+<p align="center">Thanks for stopping by — feel free to star ⭐ my repos!</p>
