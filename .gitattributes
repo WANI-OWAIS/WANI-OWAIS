@@ -1,0 +1,9 @@
+# Normalise to LF in the repository. The workflows run on Linux runners, so
+# committing CRLF from a Windows checkout would break the shell steps.
+* text=auto eol=lf
+
+# Generated artwork — keep diffs out of the way and never touch line endings
+*.svg -diff -text
+*.png binary
+*.jpg binary
+*.webp binary

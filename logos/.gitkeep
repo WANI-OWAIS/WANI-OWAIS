@@ -1,0 +1,3 @@
+Drop optional project logos here (png / svg / jpg / webp) and reference the
+filename from the "logo" field in projects.json. Cards without a logo render a
+gradient monogram instead, so this directory can stay empty.

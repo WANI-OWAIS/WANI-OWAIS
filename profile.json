@@ -1,0 +1,50 @@
+{
+  "name": "Owais Hassan Wani",
+  "username": "WANI-OWAIS",
+  "role": "Full Stack Developer",
+  "tagline": "Building modern, scalable, and user-centric web applications.",
+  "location": "Jammu & Kashmir, India",
+  "education": "B.Tech, Computer Science & Engineering — NMAMIT",
+  "company": "Full Stack Developer Intern @ Vertex Kashmir Holidays",
+  "status": "Designing, building and shipping for the web",
+  "email": "owaishassanwani@gmail.com",
+  "portfolio": "wani-owais.github.io/My-Portfolio",
+  "linkedin": "owais-hassan-wani",
+
+  "stack": [
+    ["Languages", "JavaScript, TypeScript, C, C++"],
+    ["Frontend", "React, Next.js, Tailwind CSS"],
+    ["Backend", "Node.js, Express, REST, Socket.IO"],
+    ["Database", "PostgreSQL, MongoDB, Prisma, Neon"],
+    ["Tooling", "Git, Vercel, Postman, VS Code"]
+  ],
+
+  "stats": {
+    "_comment": "Language byte share is skewed by notebooks, which count their embedded base64 output as source. Empty both arrays to show every language untouched.",
+    "excludeLanguages": ["Jupyter Notebook"],
+    "excludeRepos": []
+  },
+
+  "metrics": [
+    ["Frontend", 93],
+    ["Backend", 88],
+    ["Databases", 84],
+    ["Tooling", 79]
+  ],
+
+  "terminal": [
+    { "type": "cmd", "text": "whoami" },
+    { "type": "out", "text": "owais-hassan-wani  ::  full stack developer" },
+    { "type": "gap" },
+    { "type": "cmd", "text": "cat stack.json" },
+    { "type": "code", "text": "{" },
+    { "type": "code", "text": "  \"frontend\": [\"React\", \"Next.js\", \"TypeScript\"]," },
+    { "type": "code", "text": "  \"backend\" : [\"Node.js\", \"Express\", \"Socket.IO\"]," },
+    { "type": "code", "text": "  \"database\": [\"PostgreSQL\", \"Prisma\", \"MongoDB\"]" },
+    { "type": "code", "text": "}" },
+    { "type": "gap" },
+    { "type": "cmd", "text": "npm run build && deploy" },
+    { "type": "ok", "text": "compiled successfully in 1.42s" },
+    { "type": "ok", "text": "deployed to production — all checks passed" }
+  ]
+}

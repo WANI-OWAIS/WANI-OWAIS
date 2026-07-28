@@ -1,0 +1,23 @@
+[
+  {
+    "name": "Vertex Kashmir Holidays",
+    "url": "https://vertexkashmirholidays.com",
+    "label": "vertexkashmirholidays.com",
+    "description": "Production travel booking platform with curated packages, itinerary management and authenticated bookings.",
+    "tags": ["Next.js", "TypeScript", "Prisma"],
+    "languages": { "TypeScript": 64, "CSS": 21, "JavaScript": 11, "Other": 4 },
+    "live": true
+  },
+  {
+    "name": "Collaborative Code Editor",
+    "repo": "WANI-OWAIS/RealTime-CodeEditor-Collaborative",
+    "description": "Real-time multi-user editor with live cursor sync, shared rooms and in-browser code execution.",
+    "tags": ["React", "Node.js", "Socket.IO"]
+  },
+  {
+    "name": "StudyNotion",
+    "repo": "WANI-OWAIS/StudyNotion-EdTech",
+    "description": "Full-stack EdTech platform with course authoring, media pipeline and integrated payments.",
+    "tags": ["MERN", "Cloudinary", "Razorpay"]
+  }
+]

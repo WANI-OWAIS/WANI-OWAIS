@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="130" viewBox="0 0 1180 130" role="img" aria-label="">
+  <!-- Transparent background so the wave reads on both GitHub themes -->
+  <defs>
+    <linearGradient id="footerRule" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3B82F6" stop-opacity="0"/>
+      <stop offset="0.25" stop-color="#3B82F6"/>
+      <stop offset="0.5" stop-color="#06B6D4"/>
+      <stop offset="0.75" stop-color="#8B5CF6"/>
+      <stop offset="1" stop-color="#8B5CF6" stop-opacity="0"/>
+      <animateTransform attributeName="gradientTransform" type="translate" values="-0.3 0;0.3 0;-0.3 0" dur="9s" repeatCount="indefinite"/>
+    </linearGradient>
+    <linearGradient id="waveA" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#3B82F6"/>
+      <stop offset="1" stop-color="#06B6D4"/>
+    </linearGradient>
+    <linearGradient id="waveB" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#06B6D4"/>
+      <stop offset="1" stop-color="#8B5CF6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Drifting wave bands -->
+  <g fill="none" stroke-width="2" stroke-linecap="round">
+    <path stroke="url(#waveA)" opacity="0.45"
+          d="M-200 74 Q -100 50 0 74 T 200 74 T 400 74 T 600 74 T 800 74 T 1000 74 T 1200 74 T 1400 74">
+      <animateTransform attributeName="transform" type="translate" values="0 0;200 0" dur="7s" repeatCount="indefinite"/>
+    </path>
+    <path stroke="url(#waveB)" opacity="0.30"
+          d="M-200 86 Q -100 108 0 86 T 200 86 T 400 86 T 600 86 T 800 86 T 1000 86 T 1200 86 T 1400 86">
+      <animateTransform attributeName="transform" type="translate" values="200 0;0 0" dur="9s" repeatCount="indefinite"/>
+    </path>
+  </g>
+
+  <!-- Centre rule with a travelling highlight -->
+  <rect x="0" y="39" width="1180" height="2" rx="1" fill="url(#footerRule)"/>
+
+  <!-- Node markers along the rule -->
+  <g>
+    <circle cx="430" cy="40" r="3" fill="#3B82F6">
+      <animate attributeName="opacity" values="1;0.25;1" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="590" cy="40" r="4" fill="#06B6D4">
+      <animate attributeName="r" values="4;6;4" dur="2.4s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="1;0.4;1" dur="2.4s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="750" cy="40" r="3" fill="#8B5CF6">
+      <animate attributeName="opacity" values="1;0.25;1" dur="2.4s" begin="1.2s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+
+  <!-- Rising motes -->
+  <g>
+    <circle cx="180" cy="100" r="1.6" fill="#3B82F6" opacity="0.5">
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -26;0 0" dur="8s" begin="-2s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="360" cy="112" r="1.2" fill="#06B6D4" opacity="0.45">
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -32;0 0" dur="10s" begin="-5s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="820" cy="104" r="1.5" fill="#8B5CF6" opacity="0.5">
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -22;0 0" dur="9s" begin="-1s" repeatCount="indefinite"/>
+    </circle>
+    <circle cx="1010" cy="116" r="1.3" fill="#3B82F6" opacity="0.4">
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -30;0 0" dur="11s" begin="-6s" repeatCount="indefinite"/>
+    </circle>
+  </g>
+</svg>

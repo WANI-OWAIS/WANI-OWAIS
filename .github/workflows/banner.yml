@@ -1,0 +1,48 @@
+name: Hero Banner
+
+# Rebuilds dark.svg / light.svg from profile.json whenever the profile data or
+# the generator changes, and commits the result back to main. The README links
+# these directly from main, so they must live there rather than on a side branch.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "profile.json"
+      - ".github/scripts/generate_banner.py"
+      - ".github/workflows/banner.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: hero-banner
+  cancel-in-progress: true
+
+jobs:
+  render:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Render banner
+        run: python3 .github/scripts/generate_banner.py profile.json .
+
+      - name: Commit if the artwork changed
+        run: |
+          if git diff --quiet -- dark.svg light.svg; then
+            echo "Banner already up to date."
+            exit 0
+          fi
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add dark.svg light.svg
+          git commit -m "chore: regenerate hero banner [skip ci]"
+          git push

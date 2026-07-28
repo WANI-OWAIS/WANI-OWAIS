@@ -1,0 +1,50 @@
+name: Stats Panel
+
+# Renders the GitHub stats and achievement panels from the API and publishes
+# them to the `stats` branch. Self-hosted on purpose: the public third-party
+# card services rate-limit to 503 and 402, which leaves broken images on the
+# profile. Generating them here means the cards always render.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "profile.json"
+      - ".github/scripts/generate_stats.py"
+      - ".github/workflows/stats.yml"
+  schedule:
+    - cron: "30 */6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: stats-panel
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Render stats and achievements
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/generate_stats.py "${{ github.repository_owner }}" out
+
+      - name: Publish to stats branch
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: stats
+          build_dir: out
+          commit_message: "chore: refresh stats panel [skip ci]"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

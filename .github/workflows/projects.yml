@@ -1,0 +1,54 @@
+name: Projects Panel
+
+# Rebuilds projects.svg / projects-light.svg from projects.json plus live
+# GitHub data, then publishes them to the `projects` branch. The README points
+# at that branch, so the panel refreshes without touching main.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "projects.json"
+      - "logos/**"
+      - ".github/scripts/generate_projects.py"
+      - ".github/scripts/fetch_data.py"
+      - ".github/workflows/projects.yml"
+  schedule:
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: projects-panel
+  cancel-in-progress: true
+
+jobs:
+  generate:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Fetch live repository data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python3 .github/scripts/fetch_data.py
+
+      - name: Render project panels
+        run: python3 .github/scripts/generate_projects.py merged.json out
+
+      - name: Publish to projects branch
+        uses: crazy-max/ghaction-github-pages@v4
+        with:
+          target_branch: projects
+          build_dir: out
+          commit_message: "chore: refresh projects panel [skip ci]"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
