@@ -1,12 +1,22 @@
 #!/usr/bin/env python3
 """
-Generate the theme-aware hero banner (dark.svg + light.svg) from profile.json.
+Generate the theme-aware hero banner from profile.json, at three widths.
 
 Everything the banner shows — name, role, stack rows, terminal script, metric
-bars — comes from profile.json. Edit that file, re-run this script, and both
-themes stay in sync. Nothing about the author is hard-coded here.
+bars — comes from profile.json. Edit that file, re-run this script, and every
+theme and every breakpoint stays in sync. Nothing about the author is
+hard-coded here.
 
-Layout (1200 x 620, viewBox-scaled so it stays responsive in any README):
+Six files come out, one per (breakpoint x theme). The README selects between
+them with <picture> media queries, which is the only responsive mechanism
+GitHub's markdown pipeline honours — there is no stylesheet to hook into.
+
+    file            canvas      README breakpoint      layout
+    dark/light      1200 x 620  >= 1024px  (lg, xl)    two columns
+    *-md            800 x 1164  640-1023px (md)        stacked
+    *-sm            420 x 1084  <= 639px   (sm)        stacked, condensed
+
+Wide layout (unchanged — this is the desktop design):
 
     +--------------------------------------------------------------+
     | traffic lights        owais@dev ~ % ./profile.sh --live       |
@@ -20,8 +30,22 @@ Layout (1200 x 620, viewBox-scaled so it stays responsive in any README):
     |  bars + counters          |                                  |
     +---------------------------+----------------------------------+
 
+Stacked layouts run the same panels down a single column, identity first —
+on a phone the name matters more than the shell session:
+
+    +--------------------+
+    | title bar          |
+    | SYSTEM.PROFILE     |
+    | DEV.TERMINAL       |
+    | ACTIVITY.MONITOR   |
+    +--------------------+
+
+The -sm dossier trades dotted leaders for label-above-value pairs so the
+values keep a readable font size in a ~290px column; -md keeps the leaders.
+
 Ambient layers, back to front: gradient lighting blobs, dot grid, drifting
-particles, a slow scan line, then the panels, then the glowing frame.
+particles, a slow scan line, then the panels, then the glowing frame. Every
+animation is declarative SMIL, so it survives GitHub's camo proxy.
 
 Usage:  python3 .github/scripts/generate_banner.py [profile.json] [outdir]
 """
@@ -31,21 +55,139 @@ import os
 import random
 import sys
 
-# ---------------------------------------------------------------- canvas ----
-W, H = 1200, 620
 FONT = "ui-monospace,SFMono-Regular,Menlo,Consolas,'Liberation Mono',monospace"
 
-# left column (terminal + monitor). The two panels plus the gap between them
-# span 86 -> 578; adjust TERM_H and MON_H together or the stack drifts.
-LX, LW = 32, 496
-TERM_Y, TERM_H = 86, 310
-MON_LABEL_Y = 414
-MON_Y, MON_H = 422, 156
-
-# right column (dossier)
-RX, RW = 556, 612
-
 MONO_RATIO = 0.601  # advance width of one char in a monospace face, per em
+
+
+# --------------------------------------------------------------- layouts ----
+# Every number the artwork needs lives here, so a breakpoint is a data change
+# rather than a code change. The "wide" block reproduces the original desktop
+# geometry exactly; regenerating must leave dark.svg / light.svg untouched.
+LAYOUTS = {
+    "wide": {
+        "suffix": "", "W": 1200, "H": 620, "stacked": False,
+
+        "bar_h": 46, "bar_font": 12, "bar_branch_size": 11, "bar_text_y": 29,
+        "bar_light_x0": 30, "bar_light_dx": 20, "bar_light_cy": 25,
+        "bar_light_r": 5.5, "bar_pad_r": 34,
+
+        "grid_x0": 24, "grid_y0": 70, "grid_step": 34,
+        "bracket_inset": 18, "bracket_arm": 34,
+        "particles": 30,
+        "scan_h": 88, "scan_dur": "14s",
+        "glows": [
+            ("glowA", 215, 150, 330, 240, "0.75;1;0.75", "9s"),
+            ("glowB", 1000, 520, 360, 260, "1;0.7;1", "11s"),
+            ("glowC", 620, 60, 420, 150, "0.6;0.95;0.6", "13s"),
+        ],
+
+        "label_size": 10, "label_track": 2.6,
+        "label_note_adv": 7.6, "label_note_size": 9.5, "label_note_gap": 18,
+
+        "LX": 32, "LW": 496,
+        "term_label_y": 76, "TERM_Y": 86, "TERM_H": 310,
+        "term_size": 12, "term_step": 18, "term_x_pad": 20, "term_y_pad": 64,
+        "term_bar_h": 30, "term_head_size": 9.5,
+        "term_light_x0": 18, "term_light_dx": 15, "term_light_r": 4,
+
+        "mon_label_y": 414, "MON_Y": 422, "MON_H": 156,
+        "mon_bar_h": 28, "mon_head_size": 9.5, "mon_row_size": 11,
+        "mon_label_x": 18, "mon_track_x": 130, "mon_track_w": 268,
+        "mon_row_y0": 52, "mon_row_pitch": 28, "mon_pad_r": 18,
+
+        "RX": 556, "RW": 612,
+        "doss_label_y": 76, "doss_rule_y": 86,
+        "doss_name_y": 122, "doss_name_size": 30, "doss_name_cps": 17,
+        "doss_tagline_y": 148, "doss_tagline_size": 12.5,
+        "doss_rows_y": 182, "doss_row_size": 13, "doss_row_pitch": 22,
+        "doss_div_gap": 6, "doss_div_pitch": 30,
+        "doss_note_gap": 14, "doss_note_size": 12.5,
+    },
+
+    "md": {
+        "suffix": "-md", "W": 800, "H": 1164, "stacked": True,
+
+        "bar_h": 44, "bar_font": 11.5, "bar_branch_size": 10.5, "bar_text_y": 28,
+        "bar_light_x0": 28, "bar_light_dx": 19, "bar_light_cy": 24,
+        "bar_light_r": 5, "bar_pad_r": 32,
+
+        "grid_x0": 24, "grid_y0": 68, "grid_step": 34,
+        "bracket_inset": 16, "bracket_arm": 30,
+        "particles": 34,
+        "scan_h": 96, "scan_dur": "20s",
+        "glows": [
+            ("glowA", 150, 190, 300, 260, "0.75;1;0.75", "9s"),
+            ("glowB", 660, 880, 300, 320, "1;0.7;1", "11s"),
+            ("glowC", 400, 70, 340, 150, "0.6;0.95;0.6", "13s"),
+        ],
+
+        "label_size": 10, "label_track": 2.6,
+        "label_note_adv": 7.6, "label_note_size": 9.5, "label_note_gap": 18,
+
+        "LX": 32, "LW": 736,
+        "term_label_y": 620, "TERM_Y": 630, "TERM_H": 310,
+        "term_size": 12, "term_step": 18, "term_x_pad": 20, "term_y_pad": 64,
+        "term_bar_h": 30, "term_head_size": 9.5,
+        "term_light_x0": 18, "term_light_dx": 15, "term_light_r": 4,
+
+        "mon_label_y": 966, "MON_Y": 974, "MON_H": 156,
+        "mon_bar_h": 28, "mon_head_size": 9.5, "mon_row_size": 11,
+        "mon_label_x": 18, "mon_track_x": 140, "mon_track_w": 500,
+        "mon_row_y0": 52, "mon_row_pitch": 28, "mon_pad_r": 18,
+
+        "RX": 32, "RW": 736,
+        "doss_label_y": 86, "doss_rule_y": 96,
+        "doss_name_y": 134, "doss_name_size": 30, "doss_name_cps": 17,
+        "doss_tagline_y": 160, "doss_tagline_size": 12.5,
+        "doss_rows_y": 194, "doss_row_size": 13, "doss_row_pitch": 22,
+        "doss_div_gap": 6, "doss_div_pitch": 30,
+        "doss_note_gap": 14, "doss_note_size": 12.5,
+    },
+
+    "sm": {
+        "suffix": "-sm", "W": 420, "H": 1084, "stacked": True,
+
+        "bar_h": 36, "bar_font": 9.5, "bar_branch_size": 9, "bar_text_y": 23,
+        "bar_light_x0": 20, "bar_light_dx": 14, "bar_light_cy": 18,
+        "bar_light_r": 4, "bar_pad_r": 18,
+
+        "grid_x0": 18, "grid_y0": 56, "grid_step": 30,
+        "bracket_inset": 12, "bracket_arm": 22,
+        "particles": 22,
+        "scan_h": 70, "scan_dur": "20s",
+        "glows": [
+            ("glowA", 90, 170, 190, 240, "0.75;1;0.75", "9s"),
+            ("glowB", 340, 820, 190, 300, "1;0.7;1", "11s"),
+            ("glowC", 210, 60, 200, 130, "0.6;0.95;0.6", "13s"),
+        ],
+
+        "label_size": 9, "label_track": 2.2,
+        "label_note_adv": 6.6, "label_note_size": 8.5, "label_note_gap": 14,
+
+        "LX": 18, "LW": 384,
+        "term_label_y": 606, "TERM_Y": 614, "TERM_H": 278,
+        "term_size": 11, "term_step": 16, "term_x_pad": 16, "term_y_pad": 52,
+        "term_bar_h": 24, "term_head_size": 8.5,
+        "term_light_x0": 14, "term_light_dx": 12, "term_light_r": 3.4,
+
+        "mon_label_y": 916, "MON_Y": 924, "MON_H": 140,
+        "mon_bar_h": 24, "mon_head_size": 8.5, "mon_row_size": 10,
+        "mon_label_x": 14, "mon_track_x": 100, "mon_track_w": 200,
+        "mon_row_y0": 46, "mon_row_pitch": 26, "mon_pad_r": 14,
+
+        "RX": 18, "RW": 384,
+        "doss_label_y": 66, "doss_rule_y": 74,
+        "doss_name_y": 104, "doss_name_size": 20, "doss_name_cps": 15,
+        "doss_tagline_y": 124, "doss_tagline_size": 10,
+        "doss_rows_y": 150, "doss_row_size": 11.5, "doss_row_pitch": 26,
+        "doss_div_gap": 4, "doss_div_pitch": 24,
+        "doss_note_gap": 12, "doss_note_size": 10,
+        # -sm only: label sits above its value instead of sharing a leader line
+        "doss_stacked_rows": True,
+        "doss_key_size": 9, "doss_key_track": 1.4, "doss_value_dy": 13,
+    },
+}
 
 
 # ---------------------------------------------------------------- themes ----
@@ -86,14 +228,16 @@ THEMES = {
     },
 }
 
-C = {}          # active palette, populated by set_theme()
+C = {}          # active palette, populated by set_context()
+L = {}          # active layout
 SUFFIX = ""     # id namespace so both themes can coexist on one page
 
 
-def set_theme(name):
-    global C, SUFFIX
-    C = THEMES[name]
-    SUFFIX = name
+def set_context(theme, layout):
+    global C, L, SUFFIX
+    C = THEMES[theme]
+    L = LAYOUTS[layout]
+    SUFFIX = theme
 
 
 def uid(base):
@@ -107,6 +251,21 @@ def esc(s):
 def cw(size):
     """Advance width of one monospace character at the given font size."""
     return size * MONO_RATIO
+
+
+def wrap(text, budget):
+    """Greedy word wrap, so a longer profile.json value never overruns the
+    canvas on the narrow layouts. Always returns at least one line."""
+    words, lines, cur = text.split(), [], ""
+    for w in words:
+        cand = f"{cur} {w}".strip()
+        if len(cand) > budget and cur:
+            lines.append(cur)
+            cur = w
+        else:
+            cur = cand
+    lines.append(cur)
+    return lines
 
 
 # ------------------------------------------------------------- primitives ---
@@ -177,16 +336,18 @@ def fade_in(inner, begin, dur=0.45, dx=0):
     )
 
 
-def leader_row(label, value, y, begin, size=13):
+def leader_row(label, value, y, begin, size=None):
     """A dossier line: `Label ......... Value`, justified to the column width.
 
     textLength + lengthAdjust pins every row to exactly RW pixels, so the values
     line up flush right no matter how the viewer's monospace font measures.
     """
-    budget = int(RW / cw(size))
+    size = L["doss_row_size"] if size is None else size
+    rx, rw = L["RX"], L["RW"]
+    budget = int(rw / cw(size))
     dots = max(3, budget - len(label) - len(value) - 2)
     inner = (
-        f'<text x="{RX}" y="{y}" font-size="{size}" textLength="{RW}" '
+        f'<text x="{rx}" y="{y}" font-size="{size}" textLength="{rw}" '
         f'lengthAdjust="spacingAndGlyphs" xml:space="preserve">'
         f'<tspan fill="{C["SECONDARY"]}">{esc(label)} </tspan>'
         f'<tspan fill="{C["DOTS"]}">{"." * dots}</tspan>'
@@ -195,11 +356,43 @@ def leader_row(label, value, y, begin, size=13):
     return fade_in(inner, begin, 0.4, dx=-10)
 
 
-def divider_row(label, y, begin, size=13):
-    budget = int(RW / cw(size))
+def stacked_row(label, value, y, begin):
+    """Narrow-layout dossier entry: a small tracked-out key with a hairline
+    rule, and the value on its own line beneath it at a readable size.
+
+    Returns (markup, height_consumed) — wrapped values grow the row rather than
+    spilling past the canvas edge.
+    """
+    rx, rw = L["RX"], L["RW"]
+    key_size, val_size = L["doss_key_size"], L["doss_row_size"]
+    adv = cw(key_size) + L["doss_key_track"]
+    rule = max(2, int((rw - (len(label) + 1) * adv) / adv))
+    lines = wrap(value, int(rw / cw(val_size)))
+
+    out = [
+        f'<text x="{rx}" y="{y}" font-size="{key_size}" '
+        f'letter-spacing="{L["doss_key_track"]}" xml:space="preserve">'
+        f'<tspan fill="{C["SECONDARY"]}">{esc(label.upper())} </tspan>'
+        f'<tspan fill="{C["DOTS"]}">{"&#183;" * rule}</tspan></text>'
+    ]
+    ly = y + L["doss_value_dy"]
+    for line in lines:
+        out.append(
+            f'<text x="{rx}" y="{ly}" font-size="{val_size}" font-weight="600" '
+            f'fill="{C["TEXT"]}" xml:space="preserve">{esc(line)}</text>')
+        ly += val_size + 3
+
+    height = L["doss_row_pitch"] + (len(lines) - 1) * (val_size + 3)
+    return fade_in("".join(out), begin, 0.4, dx=-8), height
+
+
+def divider_row(label, y, begin, size=None):
+    size = L["doss_row_size"] if size is None else size
+    rx, rw = L["RX"], L["RW"]
+    budget = int(rw / cw(size))
     rule = max(3, budget - len(label) - 4)
     inner = (
-        f'<text x="{RX}" y="{y}" font-size="{size}" textLength="{RW}" '
+        f'<text x="{rx}" y="{y}" font-size="{size}" textLength="{rw}" '
         f'lengthAdjust="spacingAndGlyphs" xml:space="preserve">'
         f'<tspan fill="{C["ACCENT"]}">&#9670; {esc(label)} </tspan>'
         f'<tspan fill="{C["DOTS"]}">{"&#8212;" * rule}</tspan></text>'
@@ -207,7 +400,7 @@ def divider_row(label, y, begin, size=13):
     return fade_in(inner, begin, 0.4)
 
 
-def panel(x, y, w, h, begin=0.0, pulse_offset=0.0):
+def panel(x, y, w, h, pulse_offset=0.0):
     """Rounded panel with a slowly breathing accent border."""
     return (
         f'<rect x="{x}" y="{y}" width="{w}" height="{h}" rx="12" fill="{C["PANEL"]}" '
@@ -219,47 +412,49 @@ def panel(x, y, w, h, begin=0.0, pulse_offset=0.0):
 
 
 def section_label(x, y, text, note=""):
-    out = (f'<text x="{x}" y="{y}" font-size="10" letter-spacing="2.6" '
+    out = (f'<text x="{x}" y="{y}" font-size="{L["label_size"]}" '
+           f'letter-spacing="{L["label_track"]}" '
            f'fill="{C["PRIMARY"]}">{esc(text)}</text>')
     if note:
-        out += (f'<text x="{x + len(text) * 7.6 + 18:.0f}" y="{y}" font-size="9.5" '
+        out += (f'<text x="{x + len(text) * L["label_note_adv"] + L["label_note_gap"]:.0f}" '
+                f'y="{y}" font-size="{L["label_note_size"]}" '
                 f'fill="{C["DIM"]}">{esc(note)}</text>')
     return out
 
 
 # ------------------------------------------------------------ ambient art ---
 def lighting():
-    """Two large, slowly breathing radial washes — the 'gradient lighting'."""
-    return (
-        f'<ellipse cx="215" cy="150" rx="330" ry="240" fill="url(#{uid("glowA")})">'
-        f'<animate attributeName="opacity" values="0.75;1;0.75" dur="9s" repeatCount="indefinite"/>'
+    """Large, slowly breathing radial washes — the 'gradient lighting'."""
+    return "".join(
+        f'<ellipse cx="{cx}" cy="{cy}" rx="{rx}" ry="{ry}" fill="url(#{uid(gid)})">'
+        f'<animate attributeName="opacity" values="{vals}" dur="{dur}" '
+        f'repeatCount="indefinite"/>'
         f'</ellipse>'
-        f'<ellipse cx="1000" cy="520" rx="360" ry="260" fill="url(#{uid("glowB")})">'
-        f'<animate attributeName="opacity" values="1;0.7;1" dur="11s" repeatCount="indefinite"/>'
-        f'</ellipse>'
-        f'<ellipse cx="620" cy="60" rx="420" ry="150" fill="url(#{uid("glowC")})">'
-        f'<animate attributeName="opacity" values="0.6;0.95;0.6" dur="13s" repeatCount="indefinite"/>'
-        f'</ellipse>'
+        for gid, cx, cy, rx, ry, vals, dur in L["glows"]
     )
 
 
 def dot_grid():
     """Sparse dot lattice — structure without noise."""
+    step = L["grid_step"]
     dots = "".join(
         f'<circle cx="{x}" cy="{y}" r="1"/>'
-        for y in range(70, H, 34) for x in range(24, W, 34)
+        for y in range(L["grid_y0"], L["H"], step)
+        for x in range(L["grid_x0"], L["W"], step)
     )
     return f'<g fill="{C["GRID"]}">{dots}</g>'
 
 
-def particles(rng, count=30):
+def particles(rng, count=None):
     """Drifting motes. Negative begins mean they are already mid-flight on
     first paint, so the banner never opens on a static frame."""
+    count = L["particles"] if count is None else count
+    w, h = L["W"], L["H"]
     palette = [C["PRIMARY"], C["SECONDARY"], C["ACCENT"]]
     out = []
     for _ in range(count):
-        x = rng.uniform(20, W - 20)
-        y = rng.uniform(60, H - 20)
+        x = rng.uniform(20, w - 20)
+        y = rng.uniform(60, h - 20)
         r = rng.uniform(0.8, 2.2)
         col = rng.choice(palette)
         op = rng.uniform(0.18, 0.55)
@@ -281,17 +476,20 @@ def particles(rng, count=30):
 
 def scan_line():
     return (
-        f'<rect x="2" y="48" width="1196" height="88" fill="url(#{uid("scan")})" opacity="0.9">'
+        f'<rect x="2" y="{L["bar_h"] + 2}" width="{L["W"] - 4}" height="{L["scan_h"]}" '
+        f'fill="url(#{uid("scan")})" opacity="0.9">'
         f'<animateTransform attributeName="transform" type="translate" '
-        f'values="0 -90;0 {H};0 -90" dur="14s" repeatCount="indefinite"/></rect>'
+        f'values="0 -90;0 {L["H"]};0 -90" dur="{L["scan_dur"]}" '
+        f'repeatCount="indefinite"/></rect>'
     )
 
 
 def corner_brackets():
     """Four thin L-brackets — a quiet HUD cue at the frame corners."""
-    a, m, ln = 18, 34, C["PRIMARY"]
+    w, h = L["W"], L["H"]
+    a, m, ln = L["bracket_inset"], L["bracket_arm"], C["PRIMARY"]
     pts = [
-        (a, a, 1, 1), (W - a, a, -1, 1), (a, H - a, 1, -1), (W - a, H - a, -1, -1),
+        (a, a, 1, 1), (w - a, a, -1, 1), (a, h - a, 1, -1), (w - a, h - a, -1, -1),
     ]
     out = []
     for x, y, sx, sy in pts:
@@ -306,19 +504,23 @@ def corner_brackets():
 
 # ---------------------------------------------------------------- regions ---
 def title_bar(p):
+    w, bh = L["W"], L["bar_h"]
+    ty = L["bar_text_y"]
     handle = p["username"].lower().split("-")[-1]
     title = f'{handle}@dev  ~  % ./profile.sh --live'
     lights = "".join(
-        f'<circle cx="{cx}" cy="25" r="5.5" fill="{col}"/>'
-        for cx, col in ((30, "#FF5F57"), (50, "#FEBC2E"), (70, "#28C840"))
+        f'<circle cx="{L["bar_light_x0"] + i * L["bar_light_dx"]}" '
+        f'cy="{L["bar_light_cy"]}" r="{L["bar_light_r"]}" fill="{col}"/>'
+        for i, col in enumerate(("#FF5F57", "#FEBC2E", "#28C840"))
     )
     return (
-        f'<rect x="2" y="2" width="1196" height="46" fill="{C["TITLEBAR"]}"/>'
-        f'<line x1="2" y1="48" x2="1198" y2="48" stroke="{C["LINE"]}"/>'
+        f'<rect x="2" y="2" width="{w - 4}" height="{bh}" fill="{C["TITLEBAR"]}"/>'
+        f'<line x1="2" y1="{bh + 2}" x2="{w - 2}" y2="{bh + 2}" stroke="{C["LINE"]}"/>'
         f'{lights}'
-        f'<text x="600" y="29" text-anchor="middle" font-size="12" '
+        f'<text x="{w // 2}" y="{ty}" text-anchor="middle" font-size="{L["bar_font"]}" '
         f'fill="{C["MUTED"]}">{esc(title)}</text>'
-        f'<text x="1166" y="29" text-anchor="end" font-size="11" fill="{C["DIM"]}">'
+        f'<text x="{w - L["bar_pad_r"]}" y="{ty}" text-anchor="end" '
+        f'font-size="{L["bar_branch_size"]}" fill="{C["DIM"]}">'
         f'main <tspan fill="{C["SUCCESS"]}">&#9679;</tspan></text>'
     )
 
@@ -326,21 +528,26 @@ def title_bar(p):
 def terminal(p, t0=0.55):
     """Animated shell session driven by profile.json -> terminal[]."""
     defs, body = [], []
-    x0, y0 = LX + 20, TERM_Y + 64
-    size, step = 12, 18
+    lx, lw = L["LX"], L["LW"]
+    ty, th = L["TERM_Y"], L["TERM_H"]
+    bh = L["term_bar_h"]
+    x0, y0 = lx + L["term_x_pad"], ty + L["term_y_pad"]
+    size, step = L["term_size"], L["term_step"]
 
-    body.append(panel(LX, TERM_Y, LW, TERM_H, pulse_offset=0.0))
-    body.append(f'<rect x="{LX}" y="{TERM_Y}" width="{LW}" height="30" rx="12" '
+    body.append(panel(lx, ty, lw, th, pulse_offset=0.0))
+    body.append(f'<rect x="{lx}" y="{ty}" width="{lw}" height="{bh}" rx="12" '
                 f'fill="{C["PANEL_BAR"]}"/>')
-    body.append(f'<rect x="{LX}" y="{TERM_Y + 18}" width="{LW}" height="12" '
+    body.append(f'<rect x="{lx}" y="{ty + bh - 12}" width="{lw}" height="12" '
                 f'fill="{C["PANEL_BAR"]}"/>')
-    body.append(f'<line x1="{LX}" y1="{TERM_Y + 30}" x2="{LX + LW}" y2="{TERM_Y + 30}" '
+    body.append(f'<line x1="{lx}" y1="{ty + bh}" x2="{lx + lw}" y2="{ty + bh}" '
                 f'stroke="{C["LINE"]}"/>')
     for i, col in enumerate((C["ALERT"], "#FEBC2E", C["SUCCESS"])):
-        body.append(f'<circle cx="{LX + 18 + i * 15}" cy="{TERM_Y + 15}" r="4" '
+        body.append(f'<circle cx="{lx + L["term_light_x0"] + i * L["term_light_dx"]}" '
+                    f'cy="{ty + bh // 2}" r="{L["term_light_r"]}" '
                     f'fill="{col}" opacity="0.85"/>')
-    body.append(f'<text x="{LX + LW - 16}" y="{TERM_Y + 19}" text-anchor="end" '
-                f'font-size="9.5" fill="{C["DIM"]}">zsh &#8212; 80&#215;24</text>')
+    body.append(f'<text x="{lx + lw - 16}" y="{ty + bh - 11}" text-anchor="end" '
+                f'font-size="{L["term_head_size"]}" fill="{C["DIM"]}">'
+                f'zsh &#8212; 80&#215;24</text>')
 
     lines = p.get("terminal", [])
     t = t0
@@ -434,32 +641,36 @@ def code_spans(text):
 
 def monitor(p, t0=1.15):
     """Proficiency dashboard: animated bars with stepped count-up readouts."""
-    body = [panel(LX, MON_Y, LW, MON_H, pulse_offset=1.4)]
-    body.append(f'<rect x="{LX}" y="{MON_Y}" width="{LW}" height="28" rx="12" '
+    lx, lw = L["LX"], L["LW"]
+    my, mh, bh = L["MON_Y"], L["MON_H"], L["mon_bar_h"]
+    row_size = L["mon_row_size"]
+
+    body = [panel(lx, my, lw, mh, pulse_offset=1.4)]
+    body.append(f'<rect x="{lx}" y="{my}" width="{lw}" height="{bh}" rx="12" '
                 f'fill="{C["PANEL_BAR"]}"/>')
-    body.append(f'<rect x="{LX}" y="{MON_Y + 16}" width="{LW}" height="12" '
+    body.append(f'<rect x="{lx}" y="{my + bh - 12}" width="{lw}" height="12" '
                 f'fill="{C["PANEL_BAR"]}"/>')
-    body.append(f'<line x1="{LX}" y1="{MON_Y + 28}" x2="{LX + LW}" y2="{MON_Y + 28}" '
+    body.append(f'<line x1="{lx}" y1="{my + bh}" x2="{lx + lw}" y2="{my + bh}" '
                 f'stroke="{C["LINE"]}"/>')
-    body.append(f'<text x="{LX + 16}" y="{MON_Y + 18}" font-size="9.5" '
+    body.append(f'<text x="{lx + 16}" y="{my + bh - 10}" font-size="{L["mon_head_size"]}" '
                 f'letter-spacing="1.6" fill="{C["MUTED"]}">STACK.PROFICIENCY</text>')
     body.append(
-        f'<text x="{LX + LW - 16}" y="{MON_Y + 18}" text-anchor="end" font-size="9.5" '
-        f'fill="{C["SUCCESS"]}">&#9650; live'
+        f'<text x="{lx + lw - 16}" y="{my + bh - 10}" text-anchor="end" '
+        f'font-size="{L["mon_head_size"]}" fill="{C["SUCCESS"]}">&#9650; live'
         f'<animate attributeName="opacity" values="1;0.35;1" dur="2.2s" '
         f'repeatCount="indefinite"/></text>')
 
-    label_x = LX + 18
-    track_x = LX + 130
-    track_w = 268
-    pct_x = LX + LW - 18
+    label_x = lx + L["mon_label_x"]
+    track_x = lx + L["mon_track_x"]
+    track_w = L["mon_track_w"]
+    pct_x = lx + lw - L["mon_pad_r"]
 
     for i, (label, target) in enumerate(p.get("metrics", [])):
-        y = MON_Y + 52 + i * 28
+        y = my + L["mon_row_y0"] + i * L["mon_row_pitch"]
         begin = t0 + i * 0.18
         fill_w = track_w * target / 100.0
 
-        body.append(f'<text x="{label_x}" y="{y + 4}" font-size="11" '
+        body.append(f'<text x="{label_x}" y="{y + 4}" font-size="{row_size}" '
                     f'fill="{C["MUTED"]}">{esc(label)}</text>')
         body.append(f'<rect x="{track_x}" y="{y - 3}" width="{track_w}" height="7" '
                     f'rx="3.5" fill="{C["TRACK"]}"/>')
@@ -487,7 +698,7 @@ def monitor(p, t0=1.15):
             hide = (f'<set attributeName="opacity" to="0" '
                     f'begin="{show + frame:.2f}s"/>' if k < steps else "")
             body.append(
-                f'<text x="{pct_x}" y="{y + 4}" text-anchor="end" font-size="11" '
+                f'<text x="{pct_x}" y="{y + 4}" text-anchor="end" font-size="{row_size}" '
                 f'font-weight="700" fill="{C["TEXT"]}" opacity="0">{val}%'
                 f'<set attributeName="opacity" to="1" begin="{show:.2f}s"/>{hide}</text>')
 
@@ -495,69 +706,81 @@ def monitor(p, t0=1.15):
 
 
 def dossier(p, t0=0.45):
-    """Right-hand identity panel: typed name, tagline, dotted-leader rows."""
+    """Identity panel: typed name, tagline, then the dossier rows — dotted
+    leaders on the wide and md canvases, key-over-value on sm."""
     defs, body = [], []
+    rx, rw = L["RX"], L["RW"]
+    stacked_rows = L.get("doss_stacked_rows", False)
 
-    body.append(section_label(RX, 76, "SYSTEM.PROFILE"))
+    body.append(section_label(rx, L["doss_label_y"], "SYSTEM.PROFILE"))
     body.append(
-        f'<text x="{RX + RW}" y="76" text-anchor="end" font-size="11" '
+        f'<text x="{rx + rw}" y="{L["doss_label_y"]}" text-anchor="end" '
+        f'font-size="{L["label_size"] + 1}" '
         f'font-weight="700" fill="{C["ALERT"]}"><tspan>&#9679;</tspan> LIVE'
         f'<animate attributeName="opacity" values="1;0.3;1" dur="1.6s" '
         f'repeatCount="indefinite"/></text>')
-    body.append(f'<line x1="{RX}" y1="86" x2="{RX + RW}" y2="86" '
+    body.append(f'<line x1="{rx}" y1="{L["doss_rule_y"]}" x2="{rx + rw}" '
+                f'y2="{L["doss_rule_y"]}" '
                 f'stroke="url(#{uid("accent")})" stroke-width="1.5" opacity="0.75"/>')
 
     # name — typed, gradient-filled, with a soft glow
     d, b, dur = typing(
-        uid("name"), RX, 122, [(p["name"], f'url(#{uid("nameGrad")})', "700")],
-        t0, size=30, cps=17, hold=0.6)
+        uid("name"), rx, L["doss_name_y"],
+        [(p["name"], f'url(#{uid("nameGrad")})', "700")],
+        t0, size=L["doss_name_size"], cps=L["doss_name_cps"], hold=0.6)
     defs.append(d)
     body.append(f'<g filter="url(#{uid("textGlow")})">{b}</g>')
 
     t = t0 + dur + 0.15
-    body.append(fade_in(
-        f'<text x="{RX}" y="148" font-size="12.5" fill="{C["MUTED"]}">'
-        f'{esc(p["tagline"])}</text>', t))
+    tagline_size = L["doss_tagline_size"]
+    tag_lines = wrap(p["tagline"], int(rw / cw(tagline_size)))
+    ty = L["doss_tagline_y"]
+    for line in tag_lines:
+        body.append(fade_in(
+            f'<text x="{rx}" y="{ty}" font-size="{tagline_size}" fill="{C["MUTED"]}">'
+            f'{esc(line)}</text>', t))
+        ty += tagline_size + 4
     t += 0.28
 
-    rows = [
-        ("Role", p["role"]),
-        ("Location", p["location"]),
-        ("Education", p["education"]),
-        ("Currently", p["company"]),
-        ("Status", p["status"]),
+    def emit(label, value, y, begin):
+        """One dossier entry -> (markup, height consumed)."""
+        if stacked_rows:
+            return stacked_row(label, value, y, begin)
+        return leader_row(label, value, y, begin), L["doss_row_pitch"]
+
+    groups = [
+        (None, [
+            ("Role", p["role"]),
+            ("Location", p["location"]),
+            ("Education", p["education"]),
+            ("Currently", p["company"]),
+            ("Status", p["status"]),
+        ]),
+        ("Stack", list(p.get("stack", []))),
+        ("Connect", [
+            ("Email", p["email"]),
+            ("Portfolio", p["portfolio"]),
+            ("LinkedIn", p["linkedin"]),
+            ("GitHub", "@" + p["username"]),
+        ]),
     ]
-    y = 182
-    for label, value in rows:
-        body.append(leader_row(label, value, y, t))
-        y += 22
-        t += 0.11
 
-    t += 0.08
-    body.append(divider_row("Stack", y + 6, t))
-    y += 30
-    t += 0.12
-    for label, value in p.get("stack", []):
-        body.append(leader_row(label, value, y, t))
-        y += 22
-        t += 0.11
-
-    t += 0.08
-    body.append(divider_row("Connect", y + 6, t))
-    y += 30
-    t += 0.12
-    for label, value in (
-        ("Email", p["email"]),
-        ("Portfolio", p["portfolio"]),
-        ("LinkedIn", p["linkedin"]),
-        ("GitHub", "@" + p["username"]),
-    ):
-        body.append(leader_row(label, value, y, t))
-        y += 22
-        t += 0.11
+    y = L["doss_rows_y"]
+    for heading, rows in groups:
+        if heading:
+            t += 0.08
+            body.append(divider_row(heading, y + L["doss_div_gap"], t))
+            y += L["doss_div_pitch"]
+            t += 0.12
+        for label, value in rows:
+            markup, height = emit(label, value, y, t)
+            body.append(markup)
+            y += height
+            t += 0.11
 
     body.append(fade_in(
-        f'<text x="{RX}" y="{y + 14}" font-size="12.5" fill="{C["MUTED"]}">'
+        f'<text x="{rx}" y="{y + L["doss_note_gap"]}" font-size="{L["doss_note_size"]}" '
+        f'fill="{C["MUTED"]}">'
         f'&#9656; Stats, projects and more below '
         f'<tspan fill="{C["SECONDARY"]}">&#8595;</tspan> '
         f'<tspan fill="{C["ACCENT"]}">&#9608;'
@@ -568,16 +791,17 @@ def dossier(p, t0=0.45):
 
 
 # ------------------------------------------------------------------ build ---
-def build(p, theme):
-    set_theme(theme)
+def build(p, theme, layout="wide"):
+    set_context(theme, layout)
+    w, h = L["W"], L["H"]
     rng = random.Random(20260728)  # fixed seed -> byte-stable regeneration
 
     term_defs, term_body, _ = terminal(p)
     doss_defs, doss_body = dossier(p)
 
     svg = [
-        f'<svg xmlns="http://www.w3.org/2000/svg" width="{W}" height="{H}" '
-        f'viewBox="0 0 {W} {H}" font-family="{FONT}" role="img" '
+        f'<svg xmlns="http://www.w3.org/2000/svg" width="{w}" height="{h}" '
+        f'viewBox="0 0 {w} {h}" font-family="{FONT}" role="img" '
         f'aria-label="{esc(p["name"])} — {esc(p["role"])} — {esc(p["tagline"])}">',
         '<defs>',
 
@@ -631,33 +855,40 @@ def build(p, theme):
         f'<feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>',
 
         f'<clipPath id="{uid("winClip")}">'
-        f'<rect x="2" y="2" width="1196" height="616" rx="18"/></clipPath>',
+        f'<rect x="2" y="2" width="{w - 4}" height="{h - 4}" rx="18"/></clipPath>',
 
         term_defs,
         doss_defs,
         '</defs>',
 
-        f'<rect x="2" y="2" width="1196" height="616" rx="18" fill="{C["BG"]}"/>',
+        f'<rect x="2" y="2" width="{w - 4}" height="{h - 4}" rx="18" fill="{C["BG"]}"/>',
         f'<g clip-path="url(#{uid("winClip")})">',
-        f'<rect x="2" y="2" width="1196" height="616" fill="url(#{uid("panelGrad")})"/>',
+        f'<rect x="2" y="2" width="{w - 4}" height="{h - 4}" fill="url(#{uid("panelGrad")})"/>',
         lighting(),
         dot_grid(),
         particles(rng),
         scan_line(),
         title_bar(p),
         corner_brackets(),
+    ]
 
-        section_label(LX, 76, "DEV.TERMINAL", "// live session"),
+    # Stacked canvases lead with identity; the wide one keeps the shell on the
+    # left, so the paint order differs even though the pieces are the same.
+    terminal_block = [
+        section_label(L["LX"], L["term_label_y"], "DEV.TERMINAL", "// live session"),
         term_body,
-        section_label(LX, MON_LABEL_Y, "ACTIVITY.MONITOR", "// 30d"),
+        section_label(L["LX"], L["mon_label_y"], "ACTIVITY.MONITOR", "// 30d"),
         monitor(p),
-        doss_body,
+    ]
+    svg += ([doss_body] + terminal_block) if L["stacked"] else (terminal_block + [doss_body])
+
+    svg += [
         '</g>',
 
-        f'<rect x="3" y="3" width="1194" height="614" rx="17" fill="none" '
+        f'<rect x="3" y="3" width="{w - 6}" height="{h - 6}" rx="17" fill="none" '
         f'stroke="url(#{uid("accent")})" stroke-width="3" opacity="0.5" '
         f'filter="url(#{uid("frameGlow")})"/>',
-        f'<rect x="3" y="3" width="1194" height="614" rx="17" fill="none" '
+        f'<rect x="3" y="3" width="{w - 6}" height="{h - 6}" rx="17" fill="none" '
         f'stroke="url(#{uid("accent")})" stroke-width="1.6"/>',
         '</svg>',
     ]
@@ -671,12 +902,13 @@ def main():
         profile = json.load(f)
 
     os.makedirs(outdir, exist_ok=True)
-    for theme in ("dark", "light"):
-        svg = build(profile, theme)
-        path = os.path.join(outdir, f"{theme}.svg")
-        with open(path, "w", encoding="utf-8") as f:
-            f.write(svg)
-        print(f"wrote {path}  ({len(svg) / 1024:.1f} KB)")
+    for layout, spec in LAYOUTS.items():
+        for theme in ("dark", "light"):
+            svg = build(profile, theme, layout)
+            path = os.path.join(outdir, f"{theme}{spec['suffix']}.svg")
+            with open(path, "w", encoding="utf-8") as f:
+                f.write(svg)
+            print(f"wrote {path}  ({len(svg) / 1024:.1f} KB)")
 
 
 if __name__ == "__main__":

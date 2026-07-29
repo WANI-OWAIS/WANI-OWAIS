@@ -1,33 +1,61 @@
 <!-- ===================== HERO BANNER ===================== -->
 <!-- Generated from profile.json by .github/scripts/generate_banner.py -->
-<!-- GitHub serves dark.svg in dark mode and light.svg in light mode -->
+<!--
+  Six renders, one per breakpoint x theme. <picture> media queries are the only
+  responsive mechanism GitHub's markdown pipeline honours — class attributes are
+  stripped and there is no stylesheet to hook into — so the breakpoints live in
+  the media queries and the layout switch happens inside the SVG itself.
+
+      >= 1024px (lg, xl)  dark.svg      / light.svg      two columns
+      640-1023px (md)     dark-md.svg   / light-md.svg   stacked
+      <= 639px  (sm)      dark-sm.svg   / light-sm.svg   stacked, condensed
+
+  First matching <source> wins, so the narrow queries must come first.
+-->
 
 <picture>
+  <source media="(max-width: 639px) and (prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/dark-sm.svg">
+  <source media="(max-width: 639px)" srcset="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/light-sm.svg">
+  <source media="(max-width: 1023px) and (prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/dark-md.svg">
+  <source media="(max-width: 1023px)" srcset="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/light-md.svg">
   <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/dark.svg">
-  <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/light.svg">
-  <img alt="Owais Hassan Wani — Full Stack Developer" src="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/light.svg">
+  <img width="100%" alt="Owais Hassan Wani — Full Stack Developer" src="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/light.svg">
 </picture>
 
 <!-- ===================== TYPING HEADLINE ===================== -->
+<!-- Canvas width and type size step down with the viewport so the headline
+     stays legible instead of being scaled to a few pixels tall on a phone -->
 
 <div align="center">
 
-<img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=24&pause=1000&color=3B82F6&center=true&vCenter=true&width=760&lines=Full+Stack+Developer;React+%7C+Next.js+%7C+TypeScript;Node.js+%7C+Express+%7C+PostgreSQL;Building+scalable%2C+user-centric+web+apps" alt="Full Stack Developer — React, Next.js, TypeScript, Node.js, PostgreSQL" />
+<picture>
+  <source media="(max-width: 639px)" srcset="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=15&pause=1000&color=3B82F6&center=true&vCenter=true&width=340&height=40&lines=Full+Stack+Developer;React+%7C+Next.js+%7C+TypeScript;Node.js+%7C+Express+%7C+PostgreSQL;Building+scalable%2C+user-centric+web+apps">
+  <source media="(max-width: 1023px)" srcset="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=20&pause=1000&color=3B82F6&center=true&vCenter=true&width=560&height=48&lines=Full+Stack+Developer;React+%7C+Next.js+%7C+TypeScript;Node.js+%7C+Express+%7C+PostgreSQL;Building+scalable%2C+user-centric+web+apps">
+  <img src="https://readme-typing-svg.demolab.com?font=JetBrains+Mono&weight=600&size=24&pause=1000&color=3B82F6&center=true&vCenter=true&width=760&lines=Full+Stack+Developer;React+%7C+Next.js+%7C+TypeScript;Node.js+%7C+Express+%7C+PostgreSQL;Building+scalable%2C+user-centric+web+apps" alt="Full Stack Developer — React, Next.js, TypeScript, Node.js, PostgreSQL" />
+</picture>
 
 </div>
 
 <!-- ===================== BADGES ===================== -->
 
+<!--
+  Badges are separated by plain whitespace rather than &nbsp; so a narrow
+  column can break the row between them instead of overflowing.
+
+  shields.io no longer ships a `linkedin` icon (simple-icons dropped the mark),
+  so `logo=linkedin` silently renders a badge with no glyph. The LinkedIn
+  badge below carries the mark as an inline data-URI instead; the fill is baked
+  into the SVG because shields does not apply logoColor to custom logos.
+-->
+
 <div align="center">
 
 <a href="https://linkedin.com/in/owais-hassan-wani">
-  <img src="https://img.shields.io/badge/LinkedIn-Connect-0D1117?style=for-the-badge&logo=linkedin&logoColor=3B82F6&labelColor=0D1117" alt="LinkedIn" />
+  <img src="https://img.shields.io/badge/LinkedIn-Connect-0D1117?style=for-the-badge&labelColor=0D1117&logo=data:image/svg%2Bxml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0iIzNCODJGNiI%2BPHBhdGggZD0iTTIwLjQ0NyAyMC40NTJoLTMuNTU0di01LjU2OWMwLTEuMzI4LS4wMjctMy4wMzctMS44NTItMy4wMzctMS44NTMgMC0yLjEzNiAxLjQ0NS0yLjEzNiAyLjkzOXY1LjY2N0g5LjM1MVY5aDMuNDE0djEuNTYxaC4wNDZjLjQ3Ny0uOSAxLjYzNy0xLjg1IDMuMzctMS44NSAzLjYwMSAwIDQuMjY3IDIuMzcgNC4yNjcgNS40NTV2Ni4yODZ6TTUuMzM3IDcuNDMzYy0xLjE0NCAwLTIuMDYzLS45MjYtMi4wNjMtMi4wNjUgMC0xLjEzOC45Mi0yLjA2MyAyLjA2My0yLjA2MyAxLjE0IDAgMi4wNjQuOTI1IDIuMDY0IDIuMDYzIDAgMS4xMzktLjkyNSAyLjA2NS0yLjA2NCAyLjA2NXptMS43ODIgMTMuMDE5SDMuNTU1VjloMy41NjR2MTEuNDUyek0yMi4yMjUgMEgxLjc3MUMuNzkyIDAgMCAuNzc0IDAgMS43Mjl2MjAuNTQyQzAgMjMuMjI3Ljc5MiAyNCAxLjc3MSAyNGgyMC40NTFDMjMuMiAyNCAyNCAyMy4yMjcgMjQgMjIuMjcxVjEuNzI5QzI0IC43NzQgMjMuMiAwIDIyLjIyMiAwaC4wMDN6Ii8%2BPC9zdmc%2B" alt="LinkedIn" />
 </a>
-&nbsp;
 <a href="https://wani-owais.github.io/My-Portfolio/">
   <img src="https://img.shields.io/badge/Portfolio-Visit-0D1117?style=for-the-badge&logo=googlechrome&logoColor=06B6D4&labelColor=0D1117" alt="Portfolio" />
 </a>
-&nbsp;
 <a href="mailto:owaishassanwani@gmail.com">
   <img src="https://img.shields.io/badge/Email-Reach%20out-0D1117?style=for-the-badge&logo=gmail&logoColor=8B5CF6&labelColor=0D1117" alt="Email" />
 </a>
@@ -37,11 +65,9 @@
 <a href="https://github.com/WANI-OWAIS?tab=followers">
   <img src="https://img.shields.io/github/followers/WANI-OWAIS?style=for-the-badge&logo=github&logoColor=F8FAFC&label=Followers&labelColor=0D1117&color=3B82F6" alt="GitHub followers" />
 </a>
-&nbsp;
 <a href="https://github.com/WANI-OWAIS?tab=repositories&sort=stargazers">
   <img src="https://img.shields.io/github/stars/WANI-OWAIS?style=for-the-badge&logo=github&logoColor=F8FAFC&label=Stars&labelColor=0D1117&color=06B6D4" alt="Total stars" />
 </a>
-&nbsp;
 <img src="https://komarev.com/ghpvc/?username=WANI-OWAIS&style=for-the-badge&label=Profile+Views&color=8B5CF6" alt="Profile views" />
 
 </div>
@@ -191,9 +217,17 @@ Core coursework in data structures, algorithms, databases, operating systems and
 
 </div>
 
+<!--
+  One project per row rather than three across. A three-column table has a
+  min-content width of ~385px, which no phone column can satisfy, so GitHub's
+  own overflow-x on tables turned it into a sideways swipe. Stacking mirrors
+  the Experience section's single-column row pattern and reflows at any width.
+-->
+
 <table>
 <tr>
-<td valign="top" width="33%">
+<td width="4"></td>
+<td valign="top">
 
 **Vertex Kashmir Holidays**
 
@@ -204,7 +238,10 @@ Production travel booking platform with curated packages, itinerary management a
 [**Visit the live site →**](https://vertexkashmirholidays.com)
 
 </td>
-<td valign="top" width="33%">
+</tr>
+<tr>
+<td width="4"></td>
+<td valign="top">
 
 **Real-Time Collaborative Code Editor**
 
@@ -215,7 +252,10 @@ Multi-user editor where several people edit the same document at once, with live
 [**View repository →**](https://github.com/WANI-OWAIS/RealTime-CodeEditor-Collaborative)
 
 </td>
-<td valign="top" width="33%">
+</tr>
+<tr>
+<td width="4"></td>
+<td valign="top">
 
 **StudyNotion**
 
@@ -299,9 +339,13 @@ Full-stack EdTech platform covering course authoring, a media upload pipeline an
 
 ## <img src="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/.github/assets/spark.svg" width="18" /> Current Focus
 
+<!-- Stacked for the same reason as Featured Projects: two columns of bulleted
+     prose cannot reflow below ~300px, so the pairs run vertically instead. -->
+
 <table>
 <tr>
-<td valign="top" width="50%">
+<td width="4"></td>
+<td valign="top">
 
 **Building**
 
@@ -314,7 +358,10 @@ Full-stack EdTech platform covering course authoring, a media upload pipeline an
 - System design and scalable backend architecture
 
 </td>
-<td valign="top" width="50%">
+</tr>
+<tr>
+<td width="4"></td>
+<td valign="top">
 
 **Exploring**
 

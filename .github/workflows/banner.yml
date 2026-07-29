@@ -36,13 +36,16 @@ jobs:
         run: python3 .github/scripts/generate_banner.py profile.json .
 
       - name: Commit if the artwork changed
+        env:
+          # one render per breakpoint x theme — see generate_banner.py LAYOUTS
+          ART: dark.svg light.svg dark-md.svg light-md.svg dark-sm.svg light-sm.svg
         run: |
-          if git diff --quiet -- dark.svg light.svg; then
+          if git diff --quiet -- $ART; then
             echo "Banner already up to date."
             exit 0
           fi
           git config user.name  "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add dark.svg light.svg
+          git add $ART
           git commit -m "chore: regenerate hero banner [skip ci]"
           git push
