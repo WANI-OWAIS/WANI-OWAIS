@@ -167,42 +167,6 @@ const owais = {
 
 <br/>
 
-<!-- ===================== EXPERIENCE ===================== -->
-
-## <img src="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/.github/assets/spark.svg" width="18" /> Experience
-
-<table>
-<tr>
-<td width="4"></td>
-<td>
-
-### Full Stack Developer Intern
-**Vertex Kashmir Holidays** &nbsp;·&nbsp; Jammu & Kashmir, India
-
-Building and maintaining a production travel booking platform serving real customers.
-
-- Developing full-stack features across a **Next.js**, **TypeScript** and **Tailwind CSS** frontend
-- Modelling and querying relational data with **Prisma ORM** on **Neon PostgreSQL**
-- Implementing secure session handling and protected routes with **Auth.js**
-- Shipping to production on **Vercel** with an iterative release cycle
-
-</td>
-</tr>
-<tr>
-<td width="4"></td>
-<td>
-
-### B.Tech, Computer Science & Engineering
-**NMAM Institute of Technology (NMAMIT)**
-
-Core coursework in data structures, algorithms, databases, operating systems and computer networks, applied through self-directed full-stack project work.
-
-</td>
-</tr>
-</table>
-
-<br/>
-
 <!-- ===================== FEATURED PROJECTS ===================== -->
 
 ## <img src="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/.github/assets/spark.svg" width="18" /> Featured Projects
