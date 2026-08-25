@@ -301,51 +301,6 @@ Full-stack EdTech platform covering course authoring, a media upload pipeline an
 
 <br/>
 
-<!-- ===================== CURRENT FOCUS ===================== -->
-
-## <img src="https://raw.githubusercontent.com/WANI-OWAIS/WANI-OWAIS/main/.github/assets/spark.svg" width="18" /> Current Focus
-
-<!-- Stacked for the same reason as Featured Projects: two columns of bulleted
-     prose cannot reflow below ~300px, so the pairs run vertically instead. -->
-
-<table>
-<tr>
-<td width="4"></td>
-<td valign="top">
-
-**Building**
-
-- Production features for the Vertex Kashmir Holidays platform
-- Full-stack side projects in the Next.js and TypeScript ecosystem
-
-**Deepening**
-
-- Advanced TypeScript patterns and type-level design
-- System design and scalable backend architecture
-
-</td>
-</tr>
-<tr>
-<td width="4"></td>
-<td valign="top">
-
-**Exploring**
-
-- Cloud infrastructure and deployment pipelines
-- Real-time systems built on WebSockets
-- Database performance and query optimisation
-
-**Open to**
-
-- Open-source collaboration
-- Full-stack development opportunities
-
-</td>
-</tr>
-</table>
-
-<br/>
-
 <!-- ===================== FOOTER ===================== -->
 
 <div align="center">
